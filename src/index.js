@@ -6,11 +6,13 @@ let actualSlide = 0;
 
 //While clicking pin slide changes
 const changeSlideByPin = function (e) {
+  clearInterval(timer);
   slides[actualSlide].classList.remove("show");
   pins[actualSlide].classList.remove("selected");
   actualSlide = e.target.dataset.key;
   slides[actualSlide].classList.add("show");
   pins[actualSlide].classList.add("selected");
+  timer = setInterval(changeSlideByArrow, 3000);
 };
 
 //While clicking arrows slides change forward/bacward
@@ -23,6 +25,7 @@ const changeSlideByArrow = function (e) {
   else tmp = e.target.dataset.key;
   switch (tmp) {
     case "next":
+      clearInterval(timer);
       slides[actualSlide].classList.remove("show");
       pins[actualSlide].classList.remove("selected");
       ++actualSlide;
@@ -31,9 +34,11 @@ const changeSlideByArrow = function (e) {
       }
       slides[actualSlide].classList.add("show");
       pins[actualSlide].classList.add("selected");
+      timer = setInterval(changeSlideByArrow, 3000);
       break;
 
     case "prev":
+      clearInterval(timer);
       slides[actualSlide].classList.remove("show");
       pins[actualSlide].classList.remove("selected");
       --actualSlide;
@@ -42,13 +47,14 @@ const changeSlideByArrow = function (e) {
       }
       slides[actualSlide].classList.add("show");
       pins[actualSlide].classList.add("selected");
+      timer = setInterval(changeSlideByArrow, 3000);
       break;
     default:
   }
 };
 
 // While clicking 'play' button, slides change every 3 sec.
-// TODO stop timer when pin/arrow is clicked
+
 let playing = true;
 let timer;
 const autoPlay = function (e) {
