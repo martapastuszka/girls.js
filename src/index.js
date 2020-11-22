@@ -17,9 +17,6 @@ const changeSlideByPin = function (e) {
 
 //While clicking arrows slides change forward/bacward
 const changeSlideByArrow = function (e) {
-  //I use changeSlideByArrow instead of changeSlideByTimer for Autoplay
-  // Solved: how to pass a parameter to changeSlideByArrow function - now it throws a bug
-  // because I refer to e. which in cSBA function is mouseEvent.
   let tmp;
   if (e === undefined) tmp = "next";
   else tmp = e.target.dataset.key;
@@ -68,17 +65,6 @@ const autoPlay = function (e) {
     clearInterval(timer);
   }
 };
-
-// function changing slides while play button clicked
-
-// const changeSlideByTimer = function () {
-//   slides[actualSlide].classList.remove("show");
-//   ++actualSlide;
-//   if (actualSlide >= slides.length) {
-//     actualSlide = 0;
-//   }
-//   slides[actualSlide].classList.add("show");
-// };
 
 const executeOnLoad = function () {
   pins[actualSlide].classList.remove("selected");
