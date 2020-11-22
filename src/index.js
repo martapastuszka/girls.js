@@ -1,36 +1,42 @@
-let slides = [...document.querySelectorAll("figure")];
-let pins = [...document.querySelectorAll(".pin")];
+fetch("./src/data.json")
+  .then(function (resp) {
+    return resp.json();
+  })
+  .then(function (data) {
+    test(data);
+  });
+
 let actualSlide = 0;
 
-const changeSlideByPin = function (e) {
-  slides[actualSlide].classList.remove("show");
-  actualSlide = e.target.dataset.key;
-  slides[actualSlide].classList.add("show");
-};
+const test = function (data) {
+  let counter = 0;
+  let slideNumber;
+  for (const key in data) {
+    slideNumber = `slide${counter}`;
+    const figure = document.createElement("figure");
+    figure.setAttribute("id", slideNumber);
+    if (counter === 0) figure.classList.add("show");
+    document.querySelector("#slides").appendChild(figure);
 
-const changeSlideByArrow = function (e) {
-  switch (e.target.dataset.key) {
-    case "next":
-      slides[actualSlide].classList.remove("show");
-      ++actualSlide;
-      if (actualSlide >= slides.length) {
-        actualSlide = 0;
-      }
-      slides[actualSlide].classList.add("show");
-      break;
+    const img = document.createElement("img");
+    img.src = `data:image/jpeg;base64, ${data[key].img}`;
+    img.style.width = "100%";
+    document.querySelector(`#${slideNumber}`).appendChild(img);
 
-    case "prev":
-      slides[actualSlide].classList.remove("show");
-      --actualSlide;
-      if (actualSlide < 0) {
-        actualSlide = slides.length - 1;
-      }
-      slides[actualSlide].classList.add("show");
-      break;
-    default:
+    const figcaption = document.createElement("figcaption");
+    figcaption.innerHTML = `Medium by ${data[key].link} ${data[key].author}`;
+    document.querySelector(`#${slideNumber}`).appendChild(figcaption);
+
+    ++counter;
   }
 };
 
-pins.forEach((pin) => pin.addEventListener("click", changeSlideByPin));
-document.querySelector(".next").addEventListener("click", changeSlideByArrow);
-document.querySelector(".prev").addEventListener("click", changeSlideByArrow);
+const renderNext = function (img) {};
+
+document.querySelector(".next").addEventListener("click", renderNext);
+
+// "img0": {
+//   "link": "https://www.flickr.com/photos/thomashawk/14586158819/",
+//   "title": "Colorado",
+//   "author": "Thomas Hawk",
+//   "img": "123"
