@@ -1,83 +1,63 @@
-//my version
+fetch("./src/data.json")
+  .then(function (resp) {
+    return resp.json();
+  })
+  .then(function (data) {
+    test(data);
+  });
 
-let slides = [...document.querySelectorAll("figure")];
-let pins = [...document.querySelectorAll(".pin")];
-let actualSlide = 0;
+// let actualSlide = 0;
+//todo: how to shorten the time between page loading and page displaying?
 
-//While clicking pin slide changes
-const changeSlideByPin = function (e) {
-  clearInterval(timer);
-  slides[actualSlide].classList.remove("show");
-  pins[actualSlide].classList.remove("selected");
-  actualSlide = e.target.dataset.key;
-  slides[actualSlide].classList.add("show");
-  pins[actualSlide].classList.add("selected");
-  timer = setInterval(changeSlideByArrow, 3000);
-};
+const prevBtn = document.querySelector("#prev");
+const slides = document.querySelector("#slides");
 
-//While clicking arrows slides change forward/bacward
-const changeSlideByArrow = function (e) {
-  let tmp;
-  if (e === undefined) tmp = "next";
-  else tmp = e.target.dataset.key;
-  switch (tmp) {
-    case "next":
-      clearInterval(timer);
-      slides[actualSlide].classList.remove("show");
-      pins[actualSlide].classList.remove("selected");
-      ++actualSlide;
-      if (actualSlide >= slides.length) {
-        actualSlide = 0;
-      }
-      slides[actualSlide].classList.add("show");
-      pins[actualSlide].classList.add("selected");
-      timer = setInterval(changeSlideByArrow, 3000);
-      break;
+const test = function (data) {
+  const ulList = document.createElement("ul");
+  document.querySelector("nav").appendChild(ulList);
 
-    case "prev":
-      clearInterval(timer);
-      slides[actualSlide].classList.remove("show");
-      pins[actualSlide].classList.remove("selected");
-      --actualSlide;
-      if (actualSlide < 0) {
-        actualSlide = slides.length - 1;
-      }
-      slides[actualSlide].classList.add("show");
-      pins[actualSlide].classList.add("selected");
-      timer = setInterval(changeSlideByArrow, 3000);
-      break;
-    default:
+  let counter = 0;
+  let slideNumber;
+  let pinNumber;
+  for (const key in data) {
+    slideNumber = `slide${counter}`;
+    const figure = document.createElement("figure");
+    figure.setAttribute("id", slideNumber);
+    if (counter === 0) figure.classList.add("show");
+    // document.querySelector("#slides").appendChild(figure);
+    slides.insertBefore(figure, prevBtn);
+
+    const img = document.createElement("img");
+    img.src = `data:image/jpeg;base64, ${data[key].img}`;
+    img.style.width = "100%";
+    document.querySelector(`#${slideNumber}`).appendChild(img);
+
+    const figcaption = document.createElement("figcaption");
+    figcaption.innerHTML = `${data[key].title} by ${data[key].author}`;
+    document.querySelector(`#${slideNumber}`).appendChild(figcaption);
+
+    //to do: ${data[key].link} // fix a href
+    // "Colorado colors" by
+    // <a href="https://www.flickr.com/photos/cptspock/2857543585"
+    //   >Jasen Miller</a
+
+    const liElement = document.createElement("li");
+    document.querySelector("ul").appendChild(liElement);
+    pinNumber = `pin${counter}`;
+    const pin = document.createElement("button");
+    pin.setAttribute("id", pinNumber);
+    pin.setAttribute("data-key", counter);
+    pin.classList.add("pin");
+    liElement.appendChild(pin);
+
+    ++counter;
   }
 };
 
-// While clicking 'play' button, slides change every 3 sec.
+// todo: loading bar
 
-let playing = true;
-let timer;
-const autoPlay = function (e) {
-  if (playing) {
-    playing = false;
-    e.target.classList.add("on");
-    timer = setInterval(changeSlideByArrow, 3000);
-  } else {
-    playing = true;
-    e.target.classList.remove("on");
-    clearInterval(timer);
-  }
-};
-
-const executeOnLoad = function () {
-  pins[actualSlide].classList.remove("selected");
-  pins[0].classList.add("selected");
-};
-
-// executeOnLoad();
-
-pins.forEach((pin) => pin.addEventListener("click", changeSlideByPin));
-document.querySelector(".next").addEventListener("click", changeSlideByArrow);
-document.querySelector(".prev").addEventListener("click", changeSlideByArrow);
-document.querySelector("#play").addEventListener("click", autoPlay);
-
-document.addEventListener("onload", executeOnLoad());
-
-//workshop version
+// "img0": {
+//   "link": "https://www.flickr.com/photos/thomashawk/14586158819/",
+//   "title": "Colorado",
+//   "author": "Thomas Hawk",
+//   "img": "123"
