@@ -7,20 +7,14 @@ fetch("./src/data.json")
   });
 
 // let actualSlide = 0;
+//todo: how to shorten the time between page loading and page displaying?
+
+const prevBtn = document.querySelector("#prev");
+const slides = document.querySelector("#slides");
 
 const test = function (data) {
-  const slides = document.createElement("div");
-  slides.setAttribute("id", "slides");
-  slides.classList.add("slides");
-  slides.setAttribute("tabindex", "1");
-  slides.setAttribute("autofocus", "autofocus");
-  document.querySelector(".wrapper").appendChild(slides);
-
-  const nav = document.createElement("nav");
-  document.querySelector(".wrapper").appendChild(nav);
-
   const ulList = document.createElement("ul");
-  nav.appendChild(ulList);
+  document.querySelector("nav").appendChild(ulList);
 
   let counter = 0;
   let slideNumber;
@@ -30,7 +24,8 @@ const test = function (data) {
     const figure = document.createElement("figure");
     figure.setAttribute("id", slideNumber);
     if (counter === 0) figure.classList.add("show");
-    document.querySelector("#slides").appendChild(figure);
+    // document.querySelector("#slides").appendChild(figure);
+    slides.insertBefore(figure, prevBtn);
 
     const img = document.createElement("img");
     img.src = `data:image/jpeg;base64, ${data[key].img}`;
@@ -57,26 +52,6 @@ const test = function (data) {
 
     ++counter;
   }
-
-  const prev = document.createElement("div");
-  prev.setAttribute("id", "prev");
-  prev.classList.add("prev");
-  prev.setAttribute("data-key", "prev");
-  prev.innerHTML = "&laquo;";
-  slides.appendChild(prev);
-
-  const next = document.createElement("div");
-  next.setAttribute("id", "next");
-  next.classList.add("next");
-  next.setAttribute("data-key", "next");
-  next.innerHTML = "&raquo;";
-  slides.appendChild(next);
-
-  const playButton = document.createElement("button");
-  playButton.setAttribute("id", "play");
-  playButton.classList.add("play");
-  playButton.setAttribute("data-key", "next");
-  nav.appendChild(playButton);
 };
 
 // todo: loading bar
